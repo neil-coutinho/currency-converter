@@ -35,6 +35,10 @@ const currencies = {
 
 const from_currency = document.querySelector('[name="from_currency"]');
 const to_currency = document.querySelector('[name="to_currency"]');
+const api_endpoint = 'https://api.exchangeratesapi.io/latest';
+const rateMap = new Map();
+const staleThreshold = 5;
+
 
 function generateOptions(currencies) {
     return Object.entries(currencies)
@@ -43,8 +47,59 @@ function generateOptions(currencies) {
 }
 
 let options = generateOptions(currencies);
-
 from_currency.innerHTML = options;
 to_currency.innerHTML = options;
 
+
+
+async function getRates(base = 'CAD') {
+    const response = await fetch(`${api_endpoint}?base=${base}`);
+    //console.log({response});
+    const rates = await response.json();
+    
+    return rates;
+}
+
+
+async function convert(from, to, amount) {
+    //check if from rate is available in rateMap
+    //check if rates are state
+    //if not get fresh rates
+    const start = Date.now();
+    let fetchRates = false;
+   
+    
+    if(rateMap.has(from)) {
+        fetchRates = false;
+        const { updatedOn } = rateMap.get(from);
+        const diffInSeconds = Math.floor((start - updatedOn) / 1000);
+
+        if(diffInSeconds > staleThreshold) {
+            fetchRates = true; //possible stale rates
+        }
+      
+
+    } else {
+        fetchRates = true;
+    }
+    
+
+    if(fetchRates) {
+        const { rates } = await getRates(from);
+        rateMap.set(from, {rates, updatedOn: Date.now()});
+        
+    } else {
+
+        console.log('USE EXISTING RATE')
+    }
+    
+    
+
+}
+
+
+//getRates();
 //console.log({from_currency, to_currency, options})
+//convert('CAD', 'INR', 1);
+
+//setTimeout(() => convert('CAD', 'INR', 1), 3000);
