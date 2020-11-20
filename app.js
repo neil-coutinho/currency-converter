@@ -33,8 +33,12 @@ const currencies = {
     EUR: 'Euro',
   };
 
+const from_amount = document.querySelector('[name="from_amount"]');
 const from_currency = document.querySelector('[name="from_currency"]');
 const to_currency = document.querySelector('[name="to_currency"]');
+const to_amount = document.querySelector('.to_amount');
+
+const form = document.querySelector('form');
 const api_endpoint = 'https://api.exchangeratesapi.io/latest';
 const rateMap = new Map();
 const staleThreshold = 10;
@@ -62,6 +66,7 @@ async function getRates(base = 'CAD') {
 
 
 async function convert(from, to, amount) {
+    {from, to, amount}
     //check if from rate is available in rateMap
     //check if rates are state
     //if not get fresh rates
@@ -104,14 +109,24 @@ async function convert(from, to, amount) {
     }
    
     
-    //console.log({convertedAmt});
-    return;
+   
+    return convertedAmt; 
 
 }
 
+function formatAmount(amount, currency) {
+    let formattedAmt = amount;
 
-//getRates();
-//console.log({from_currency, to_currency, options})
-convert('CAD', 'INR', 1000);
+    formattedAmt = new Intl.NumberFormat('en-US',{ style: 'currency', currency }).format(amount);
+    
+    return formattedAmt
+}
 
-setTimeout(() => convert('CAD', 'INR', 1000), 3000);
+async function inputHandlerFn(e) {
+   let amount = await convert(from_currency.value, to_currency.value, from_amount.value);
+   to_amount.textContent = formatAmount(amount, to_currency.value);
+}
+
+
+form.addEventListener('input', inputHandlerFn)
+
