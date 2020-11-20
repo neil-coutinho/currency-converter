@@ -37,7 +37,7 @@ const from_currency = document.querySelector('[name="from_currency"]');
 const to_currency = document.querySelector('[name="to_currency"]');
 const api_endpoint = 'https://api.exchangeratesapi.io/latest';
 const rateMap = new Map();
-const staleThreshold = 5;
+const staleThreshold = 10;
 
 
 function generateOptions(currencies) {
@@ -88,18 +88,30 @@ async function convert(from, to, amount) {
         const { rates } = await getRates(from);
         rateMap.set(from, {rates, updatedOn: Date.now()});
         
-    } else {
+    } 
 
-        console.log('USE EXISTING RATE')
+    let convertedAmt = 0;
+    
+    if(rateMap.has(from)) {
+
+        const rate  = rateMap.get(from);
+       
+        if(rate.rates.hasOwnProperty(to)) {
+
+            convertedAmt = (rate.rates[to] * amount).toFixed(2);
+        }
+        
     }
+   
     
-    
+    //console.log({convertedAmt});
+    return;
 
 }
 
 
 //getRates();
 //console.log({from_currency, to_currency, options})
-//convert('CAD', 'INR', 1);
+convert('CAD', 'INR', 1000);
 
-//setTimeout(() => convert('CAD', 'INR', 1), 3000);
+setTimeout(() => convert('CAD', 'INR', 1000), 3000);
