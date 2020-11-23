@@ -1,6 +1,65 @@
 html, body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #d0d0d0;
     font-size: 14px;
-  }
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+
+
+}
+
+
+body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  justify-items: center;
+  align-items: center;
+  
+}
+
+.app {
+  background: #fff;
+  padding: 2rem;
+}
+
+.app form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 2rem;
+}
+
+.app form label {
+  display: block;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+
+.app form input, .app form select {
+  display: block;
+  border: none;
+  border-radius: 3px;
+  box-shadow: none;
+  font-size: 1rem;
+  line-height: 1.25;
+  padding: .5em 2.5em .5em .625em;
+  background-color: #fff;
+  border: 1px solid #dbdbdb;
+  cursor: pointer;
+}
+
+.app form input {
+  padding: .5rem;
+}
+
+.to_amount {
+  line-height: 1.25;
+  font-size: 1.2rem;
+  color: lightseagreen;
+}
+
   
   
